@@ -7,7 +7,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "AbilitySystemComponent.h"
-#include "AsyncTaskEffectStackChanged.generated.h"
+#include "FtsEffectStackChangedListener.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnGameplayEffectStackChanged, FGameplayTag, EffectGameplayTag, FActiveGameplayEffectHandle, Handle, int32, NewStackCount, int32, OldStackCount);
 
@@ -16,7 +16,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnGameplayEffectStackChanged, FGa
  * Useful to use in UI.
  */
 UCLASS(BlueprintType, meta = (ExposedAsyncProxy = AsyncTask))
-class FTSABILITYUTILITIES_API UAsyncTaskEffectStackChanged : public UBlueprintAsyncActionBase
+class FTSABILITYUTILITIES_API UFtsEffectStackChangedListener : public UBlueprintAsyncActionBase
 {
 	GENERATED_BODY()
 	
@@ -24,7 +24,7 @@ class FTSABILITYUTILITIES_API UAsyncTaskEffectStackChanged : public UBlueprintAs
 	FOnGameplayEffectStackChanged OnGameplayEffectStackChange;
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UAsyncTaskEffectStackChanged* ListenForGameplayEffectStackChange(UAbilitySystemComponent* AbilitySystemComponent, FGameplayTag EffectGameplayTag);
+	static UFtsEffectStackChangedListener* ListenForGameplayEffectStackChange(UAbilitySystemComponent* AbilitySystemComponent, FGameplayTag EffectGameplayTag);
 
 	// You must call this function manually when you want the AsyncTask to end.
 	// For UMG Widgets, you would call it in the Widget's Destruct event.

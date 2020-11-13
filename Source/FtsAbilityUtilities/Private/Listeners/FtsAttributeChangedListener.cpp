@@ -2,11 +2,11 @@
 //MIT License
 //Taken from https://github.com/tranek/GASDocumentation
 
-#include "Listeners/AsyncTaskAttributeChanged.h"
+#include "Listeners/FtsAttributeChangedListener.h"
 
-UAsyncTaskAttributeChanged* UAsyncTaskAttributeChanged::ListenForAttributeChange(UAbilitySystemComponent* AbilitySystemComponent, FGameplayAttribute Attribute)
+UFtsAttributeChangedListener* UFtsAttributeChangedListener::ListenForAttributeChange(UAbilitySystemComponent* AbilitySystemComponent, FGameplayAttribute Attribute)
 {
-	UAsyncTaskAttributeChanged* WaitForAttributeChangedTask = NewObject<UAsyncTaskAttributeChanged>();
+	UFtsAttributeChangedListener* WaitForAttributeChangedTask = NewObject<UFtsAttributeChangedListener>();
 	WaitForAttributeChangedTask->ASC = AbilitySystemComponent;
 	WaitForAttributeChangedTask->AttributeToListenFor = Attribute;
 
@@ -16,14 +16,14 @@ UAsyncTaskAttributeChanged* UAsyncTaskAttributeChanged::ListenForAttributeChange
 		return nullptr;
 	}
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(WaitForAttributeChangedTask, &UAsyncTaskAttributeChanged::AttributeChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(WaitForAttributeChangedTask, &UFtsAttributeChangedListener::AttributeChanged);
 
 	return WaitForAttributeChangedTask;
 }
 
-UAsyncTaskAttributeChanged * UAsyncTaskAttributeChanged::ListenForAttributesChange(UAbilitySystemComponent * AbilitySystemComponent, TArray<FGameplayAttribute> Attributes)
+UFtsAttributeChangedListener * UFtsAttributeChangedListener::ListenForAttributesChange(UAbilitySystemComponent * AbilitySystemComponent, TArray<FGameplayAttribute> Attributes)
 {
-	UAsyncTaskAttributeChanged* WaitForAttributeChangedTask = NewObject<UAsyncTaskAttributeChanged>();
+	UFtsAttributeChangedListener* WaitForAttributeChangedTask = NewObject<UFtsAttributeChangedListener>();
 	WaitForAttributeChangedTask->ASC = AbilitySystemComponent;
 	WaitForAttributeChangedTask->AttributesToListenFor = Attributes;
 
@@ -35,13 +35,13 @@ UAsyncTaskAttributeChanged * UAsyncTaskAttributeChanged::ListenForAttributesChan
 
 	for (FGameplayAttribute Attribute : Attributes)
 	{
-		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(WaitForAttributeChangedTask, &UAsyncTaskAttributeChanged::AttributeChanged);
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(WaitForAttributeChangedTask, &UFtsAttributeChangedListener::AttributeChanged);
 	}
 
 	return WaitForAttributeChangedTask;
 }
 
-void UAsyncTaskAttributeChanged::EndTask()
+void UFtsAttributeChangedListener::EndTask()
 {
 	if (IsValid(ASC))
 	{
@@ -57,7 +57,7 @@ void UAsyncTaskAttributeChanged::EndTask()
 	MarkPendingKill();
 }
 
-void UAsyncTaskAttributeChanged::AttributeChanged(const FOnAttributeChangeData & Data)
+void UFtsAttributeChangedListener::AttributeChanged(const FOnAttributeChangeData & Data)
 {
 	OnAttributeChanged.Broadcast(Data.Attribute, Data.NewValue, Data.OldValue);
 }

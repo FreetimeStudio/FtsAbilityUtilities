@@ -3,11 +3,11 @@
 //Taken from https://github.com/tranek/GASDocumentation
 
 
-#include "Listeners/AsyncTaskEffectStackChanged.h"
+#include "Listeners/FtsEffectStackChangedListener.h"
 
-UAsyncTaskEffectStackChanged * UAsyncTaskEffectStackChanged::ListenForGameplayEffectStackChange(UAbilitySystemComponent * AbilitySystemComponent, FGameplayTag InEffectGameplayTag)
+UFtsEffectStackChangedListener * UFtsEffectStackChangedListener::ListenForGameplayEffectStackChange(UAbilitySystemComponent * AbilitySystemComponent, FGameplayTag InEffectGameplayTag)
 {
-	UAsyncTaskEffectStackChanged* ListenForGameplayEffectStackChange = NewObject<UAsyncTaskEffectStackChanged>();
+	UFtsEffectStackChangedListener* ListenForGameplayEffectStackChange = NewObject<UFtsEffectStackChangedListener>();
 	ListenForGameplayEffectStackChange->ASC = AbilitySystemComponent;
 	ListenForGameplayEffectStackChange->EffectGameplayTag = InEffectGameplayTag;
 
@@ -17,13 +17,13 @@ UAsyncTaskEffectStackChanged * UAsyncTaskEffectStackChanged::ListenForGameplayEf
 		return nullptr;
 	}
 
-	AbilitySystemComponent->OnActiveGameplayEffectAddedDelegateToSelf.AddUObject(ListenForGameplayEffectStackChange, &UAsyncTaskEffectStackChanged::OnActiveGameplayEffectAddedCallback);
-	AbilitySystemComponent->OnAnyGameplayEffectRemovedDelegate().AddUObject(ListenForGameplayEffectStackChange, &UAsyncTaskEffectStackChanged::OnRemoveGameplayEffectCallback);
+	AbilitySystemComponent->OnActiveGameplayEffectAddedDelegateToSelf.AddUObject(ListenForGameplayEffectStackChange, &UFtsEffectStackChangedListener::OnActiveGameplayEffectAddedCallback);
+	AbilitySystemComponent->OnAnyGameplayEffectRemovedDelegate().AddUObject(ListenForGameplayEffectStackChange, &UFtsEffectStackChangedListener::OnRemoveGameplayEffectCallback);
 
 	return ListenForGameplayEffectStackChange;
 }
 
-void UAsyncTaskEffectStackChanged::EndTask()
+void UFtsEffectStackChangedListener::EndTask()
 {
 	if (IsValid(ASC))
 	{
@@ -35,7 +35,7 @@ void UAsyncTaskEffectStackChanged::EndTask()
 	MarkPendingKill();
 }
 
-void UAsyncTaskEffectStackChanged::OnActiveGameplayEffectAddedCallback(UAbilitySystemComponent * Target, const FGameplayEffectSpec & SpecApplied, FActiveGameplayEffectHandle ActiveHandle)
+void UFtsEffectStackChangedListener::OnActiveGameplayEffectAddedCallback(UAbilitySystemComponent * Target, const FGameplayEffectSpec & SpecApplied, FActiveGameplayEffectHandle ActiveHandle)
 {
 	FGameplayTagContainer AssetTags;
 	SpecApplied.GetAllAssetTags(AssetTags);
@@ -45,12 +45,12 @@ void UAsyncTaskEffectStackChanged::OnActiveGameplayEffectAddedCallback(UAbilityS
 
 	if (AssetTags.HasTagExact(EffectGameplayTag) || GrantedTags.HasTagExact(EffectGameplayTag))
 	{
-		ASC->OnGameplayEffectStackChangeDelegate(ActiveHandle)->AddUObject(this, &UAsyncTaskEffectStackChanged::GameplayEffectStackChanged);
+		ASC->OnGameplayEffectStackChangeDelegate(ActiveHandle)->AddUObject(this, &UFtsEffectStackChangedListener::GameplayEffectStackChanged);
 		OnGameplayEffectStackChange.Broadcast(EffectGameplayTag, ActiveHandle, 1, 0);
 	}
 }
 
-void UAsyncTaskEffectStackChanged::OnRemoveGameplayEffectCallback(const FActiveGameplayEffect & EffectRemoved)
+void UFtsEffectStackChangedListener::OnRemoveGameplayEffectCallback(const FActiveGameplayEffect & EffectRemoved)
 {
 	FGameplayTagContainer AssetTags;
 	EffectRemoved.Spec.GetAllAssetTags(AssetTags);
@@ -64,7 +64,7 @@ void UAsyncTaskEffectStackChanged::OnRemoveGameplayEffectCallback(const FActiveG
 	}
 }
 
-void UAsyncTaskEffectStackChanged::GameplayEffectStackChanged(FActiveGameplayEffectHandle EffectHandle, int32 NewStackCount, int32 PreviousStackCount)
+void UFtsEffectStackChangedListener::GameplayEffectStackChanged(FActiveGameplayEffectHandle EffectHandle, int32 NewStackCount, int32 PreviousStackCount)
 {
 	OnGameplayEffectStackChange.Broadcast(EffectGameplayTag, EffectHandle, NewStackCount, PreviousStackCount);
 }
