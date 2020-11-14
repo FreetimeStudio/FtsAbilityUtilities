@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffectTypes.h"
+#include "Filters/FtsTagTargetDataFilter.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FtsAbilitiesFunctionLibrary.generated.h"
 
@@ -73,4 +74,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Abilities")
     static bool GetModifierMagnitude(TSubclassOf<UGameplayEffect> EffectClass, FGameplayAttribute Attribute, float& OutMagnitude);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Abilities")
+    static FGameplayTargetDataFilterHandle MakeTagFilterHandle(FFtsTagTargetDataFilter Filter, AActor* FilterActor);
 };

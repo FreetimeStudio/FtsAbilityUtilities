@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
-#include "AttributeMacros.h"
+#include "Attributes/FtsAttributeMacros.h"
 
 #include "FtsHealthAttributeSet.generated.h"
 

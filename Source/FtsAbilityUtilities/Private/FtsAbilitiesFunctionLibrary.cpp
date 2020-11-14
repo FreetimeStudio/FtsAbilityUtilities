@@ -148,3 +148,14 @@ bool UFtsAbilitiesFunctionLibrary::GetModifierMagnitude(TSubclassOf<UGameplayEff
 
     return false;
 }
+
+FGameplayTargetDataFilterHandle UFtsAbilitiesFunctionLibrary::MakeTagFilterHandle(FFtsTagTargetDataFilter Filter,
+                                                                                  AActor* FilterActor)
+{
+    FGameplayTargetDataFilter* NewFilter = new FFtsTagTargetDataFilter(Filter);
+    NewFilter->InitializeFilterContext(FilterActor);
+
+    FGameplayTargetDataFilterHandle FilterHandle;
+    FilterHandle.Filter = TSharedPtr<FGameplayTargetDataFilter>(NewFilter);
+    return FilterHandle;
+}

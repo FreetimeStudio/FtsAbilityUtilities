@@ -2,10 +2,10 @@
 
 #include "GameplayTagContainer.h"
 #include "Abilities/GameplayAbilityTargetDataFilter.h"
-#include "TagTargetDataFilter.generated.h"
+#include "FtsTagTargetDataFilter.generated.h"
 
 USTRUCT(BlueprintType)
-struct FTSABILITYUTILITIES_API FTagTargetDataFilter : public FGameplayTargetDataFilter
+struct FTSABILITYUTILITIES_API FFtsTagTargetDataFilter : public FGameplayTargetDataFilter
 {
     GENERATED_BODY()
 

@@ -1,7 +1,7 @@
 // (c) 2020 by FreetimeStudio
 
 
-#include "FtsAutoActivatingGameplayAbility.h"
+#include "Abilities/FtsAutoActivatingGameplayAbility.h"
 #include "AbilitySystemComponent.h"
 
 UFtsAutoActivatingGameplayAbility::UFtsAutoActivatingGameplayAbility()
