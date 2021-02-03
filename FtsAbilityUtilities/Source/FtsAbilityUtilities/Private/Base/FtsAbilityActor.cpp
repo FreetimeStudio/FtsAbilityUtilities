@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 
 AFtsAbilityActor::AFtsAbilityActor()
+	: Super()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = false;
